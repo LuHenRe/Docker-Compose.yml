@@ -1,19 +1,18 @@
 FROM alpine:latest
 
-# Instala ferramentas
+# Instala Python, ferramentas de rede e Scapy via apk
 RUN apk add --no-cache \
     python3 \
     py3-pip \
+    py3-scapy \
     iproute2 \
     iputils \
     tcpdump \
     curl \
     bash
 
-# Instala scapy com a flag para bypass
-RUN pip3 install scapy --break-system-packages
-
 WORKDIR /app
 COPY spoofing.py .
 
+# Container fica ativo
 CMD ["tail", "-f", "/dev/null"]
