@@ -1,8 +1,23 @@
 FROM alpine:latest
 
-# Networking and debugging tools commonly used in network labs
-RUN apk add --no-cache iproute2 iputils tcpdump curl bash
+# Instala todas as ferramentas necessárias
+RUN apk add --no-cache \
+    python3 \
+    py3-pip \
+    iproute2 \
+    iputils \
+    tcpdump \
+    curl \
+    bash \
+    nmap
 
-WORKDIR /root
+# Instala scapy (para ARP Spoofing)
+RUN pip3 install scapy
 
-CMD ["sh"]
+WORKDIR /app
+
+# Copia o script de ataque
+COPY spoofing.py .
+
+# Mantém o container rodando
+CMD ["tail", "-f", "/dev/null"]
