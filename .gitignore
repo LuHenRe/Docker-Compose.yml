@@ -1,0 +1,22 @@
+# Editor / IDE
+.vscode/
+.idea/
+
+# Python
+__pycache__/
+*.py[cod]
+.mypy_cache/
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+.env
+.pytest_cache/
+.coverage
+
+# macOS
+.DS_Store
+
+# Docker build context
+docker-compose.override.yml
