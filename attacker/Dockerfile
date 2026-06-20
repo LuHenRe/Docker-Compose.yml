@@ -1,6 +1,6 @@
 FROM alpine:latest
 
-# Instala todas as ferramentas necessárias
+# Instala ferramentas
 RUN apk add --no-cache \
     python3 \
     py3-pip \
@@ -8,16 +8,12 @@ RUN apk add --no-cache \
     iputils \
     tcpdump \
     curl \
-    bash \
-    nmap
+    bash
 
-# Instala scapy (para ARP Spoofing)
-RUN pip3 install scapy
+# Instala scapy com a flag para bypass
+RUN pip3 install scapy --break-system-packages
 
 WORKDIR /app
-
-# Copia o script de ataque
 COPY spoofing.py .
 
-# Mantém o container rodando
 CMD ["tail", "-f", "/dev/null"]
