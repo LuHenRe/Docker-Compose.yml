@@ -1,19 +1,18 @@
-FROM alpine:latest
+FROM ubuntu:22.04
 
-# Instala Python e ferramentas de rede (sem pip)
-RUN apk add --no-cache \
+# Atualiza e instala tudo
+RUN apt-get update && apt-get install -y \
     python3 \
-    iproute2 \
-    iputils \
+    python3-pip \
     tcpdump \
     curl \
-    bash
-
-# Instala Scapy diretamente pelo gerenciador de pacotes do Alpine
-RUN apk add --no-cache py3-scapy
+    iproute2 \
+    iputils-ping \
+    net-tools \
+    && pip3 install scapy \
+    && apt-get clean
 
 WORKDIR /app
 COPY spoofing.py .
 
-# Mantém o container rodando
 CMD ["tail", "-f", "/dev/null"]
