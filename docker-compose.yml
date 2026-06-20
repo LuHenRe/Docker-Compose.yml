@@ -1,0 +1,43 @@
+# docker-compose.yml
+version: '3'
+
+services:
+  attacker:
+    build:
+      context: ./attacker
+    container_name: attacker
+    networks:
+      lab_net:
+        ipv4_address: 10.10.0.103
+    tty: true
+    stdin_open: true
+    cap_add:
+      - NET_RAW
+      - NET_ADMIN
+
+  victim1:
+    image: alpine:latest
+    container_name: victim1
+    networks:
+      lab_net:
+        ipv4_address: 10.10.0.101
+    command: tail -f /dev/null
+    tty: true
+    stdin_open: true
+
+  victim2:
+    image: alpine:latest
+    container_name: victim2
+    networks:
+      lab_net:
+        ipv4_address: 10.10.0.102
+    command: tail -f /dev/null
+    tty: true
+    stdin_open: true
+
+networks:
+  lab_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.10.0.0/24
